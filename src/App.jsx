@@ -4,15 +4,25 @@ import Dropdown from './components/Dropdown';
 import { DROPDOWN_OPTIONS } from './constants/dropdownOptions';
 
 export default function App() {
-  const [currentOption, setCurrentOption] = useState(DROPDOWN_OPTIONS[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const selectNext = () => {
+    setCurrentIndex((i) => (i + 1) % DROPDOWN_OPTIONS.length);
+  };
+
+  const currentOption = DROPDOWN_OPTIONS[currentIndex];
 
   return (
     <>
       <h1>{greeting(__APP_NAME__)}</h1>
       <div className="card">
-        <div className="card-bg" />
+        <div className="card-background" />
         <h2>Card</h2>
-        <Dropdown value={currentOption} onChange={setCurrentOption} />
+        <Dropdown
+          options={DROPDOWN_OPTIONS}
+          value={currentOption}
+          onChange={setCurrentIndex}
+        />
         <p className="card-description">
           Lorem ipsum dolor sit amet, supra mutationem signate. Nunc porta
           pulvinar lorem, a molestie elit vulputate nec. Maecenas vulputate
@@ -22,8 +32,8 @@ export default function App() {
           eros ut gravida rhoncus. Fusce pharetra, leo vitae dapibus faucibus,
           dolor nisl placerat elit, eget dignissim odio tortor in dolor.
         </p>
-        <button type="button">
-          Option <span className="card-selected-id">{currentOption.id}</span> is
+        <button type="button" onClick={selectNext}>
+          Option <span className="card-selected">{currentIndex + 1}</span> is
           selected
         </button>
       </div>

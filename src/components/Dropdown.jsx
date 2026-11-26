@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
-import { DROPDOWN_OPTIONS } from '../constants/dropdownOptions';
 import { useClickAway } from '../hooks/useClickAway';
 import DropdownOption from './DropdownOption';
 
+// захардкожено сейчас для простоты, правильнее вычислять высоту от количества элементов. Или использовать готовые библиотеки типа react-select, react-dropdown, react-dropdown-select
 const DROPDOWN_HEIGHT = 180;
 
-export default function Dropdown({ value, onChange }) {
+export default function Dropdown({ options, value, onChange }) {
   const [open, setOpen] = useState(false);
   const [up, setUp] = useState(false);
   const ref = useRef(null);
@@ -14,6 +14,7 @@ export default function Dropdown({ value, onChange }) {
   useClickAway({
     ref,
     callback: () => setOpen(false),
+    enabled: open,
   });
 
   const toggle = () => {
@@ -25,6 +26,11 @@ export default function Dropdown({ value, onChange }) {
     setOpen((o) => !o);
   };
 
+  const handleOptionClick = (index) => {
+    onChange(index);
+    setOpen(false);
+  };
+
   return (
     <div className="dropdown" ref={ref}>
       <button type="button" onClick={toggle}>
@@ -33,14 +39,11 @@ export default function Dropdown({ value, onChange }) {
       {open && (
         // можно переписать на select для лучшего accessibility
         <ul className={`dropdown-menu ${up ? 'up' : ''}`}>
-          {DROPDOWN_OPTIONS.map((v) => (
+          {options.map((option, index) => (
             <DropdownOption
-              key={v.id}
-              option={v}
-              onClick={(selectedOption) => {
-                onChange(selectedOption);
-                setOpen(false);
-              }}
+              key={option.id}
+              option={option}
+              onClick={() => handleOptionClick(index)}
             />
           ))}
         </ul>

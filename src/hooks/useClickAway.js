@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 
-export const useClickAway = ({ ref, callback }) => {
+export const useClickAway = ({ ref, callback, enabled }) => {
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     const listener = (event) => {
       if (ref.current?.contains(event.target)) {
         return;
@@ -14,5 +18,5 @@ export const useClickAway = ({ ref, callback }) => {
       document.removeEventListener('mousedown', listener);
       document.removeEventListener('touchstart', listener);
     };
-  }, [ref, callback]);
+  }, [ref, callback, enabled]);
 };
